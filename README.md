@@ -89,14 +89,14 @@ PowerShell:
 
 ```powershell
 .\.venv\Scripts\Activate.ps1
-pip install fastapi supabase python-dotenv
+pip install -r requirements.txt
 ```
 
 macOS or Linux:
 
 ```bash
 source .venv/bin/activate
-pip install fastapi supabase python-dotenv
+pip install -r requirements.txt
 ```
 
 Create `Backend/.env` with the following variables:
@@ -108,13 +108,21 @@ SUPABASE_SECRET_KEY=your-secret-key
 SUPABASE_JWKS_URL=your-jwks-url
 ```
 
-Run the connection check:
+Start the backend API:
 
 ```bash
-python main.py
+python -m uvicorn main:app --reload
 ```
 
-The script queries the `tire_brand` column from the `tires` table and reports whether the connection succeeded.
+The API is available at `http://127.0.0.1:8000`, with interactive documentation at `http://127.0.0.1:8000/docs`.
+
+Run the database migrations in filename order using the Supabase SQL Editor:
+
+1. `Backend/migrations/000_tire_inventory_schema.sql` adds stable tire IDs and enforces whole-number pricing.
+2. `Backend/migrations/001_tire_deletion_history.sql` creates the inventory history table and transactional stock-removal function.
+3. `Backend/migrations/002_suppliers_orders.sql` creates suppliers, purchase orders, line items, and the private invoice bucket.
+4. `Backend/migrations/003_supplier_website.sql` adds supplier website links to an existing database.
+5. `Backend/migrations/004_removal_financials.sql` records cost and revenue for inventory removals and reports.
 
 > Keep `SUPABASE_SECRET_KEY` on the server only. Never expose it through frontend code or variables prefixed with `NEXT_PUBLIC_`.
 
