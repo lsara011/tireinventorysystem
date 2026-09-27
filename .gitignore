@@ -1,2 +1,5 @@
 Backend/.env
 Backend/migrations
+
+# Local backups created while repairing nested repositories
+.git-backups/
