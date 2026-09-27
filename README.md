@@ -10,7 +10,7 @@ A starter application for tracking tire inventory, purchase orders, and supplier
 - Supabase connection check for the `tires` table
 - Production frontend build and lint checks
 
-Inventory workflows, authentication, API routes, and order and supplier pages are still under development.
+Inventory workflows, authenticated access, API routes, reports, and order and supplier pages are included.
 
 ## Tech Stack
 
@@ -74,7 +74,19 @@ npm run dev      # Start the development server
 npm run lint     # Run ESLint
 npm run build    # Create and validate a production build
 npm run start    # Serve the production build
+npm run test:stress # Run the default PDF, HTTP, and API validation stress suites
 ```
+
+The stress suites can also run independently from `Frontend/tireinventory`:
+
+```bash
+npm run stress:pdf        # Large tables, long notes, and PDF pagination
+npm run stress:http       # Concurrent GET requests; defaults to the login page
+npm run stress:validation # Invalid write requests that cannot mutate the database
+```
+
+Set `STRESS_URL`, `STRESS_REQUESTS`, `STRESS_CONCURRENCY`, and
+`STRESS_EXPECTED_STATUS` to tune the HTTP suite for a specific read-only route.
 
 ## Backend Setup
 
@@ -123,6 +135,9 @@ Run the database migrations in filename order using the Supabase SQL Editor:
 3. `Backend/migrations/002_suppliers_orders.sql` creates suppliers, purchase orders, line items, and the private invoice bucket.
 4. `Backend/migrations/003_supplier_website.sql` adds supplier website links to an existing database.
 5. `Backend/migrations/004_removal_financials.sql` records cost and revenue for inventory removals and reports.
+6. `Backend/migrations/005_daily_sales.sql` creates daily customer sales and service line items.
+7. `Backend/migrations/006_sale_payments.sql` adds deposits, balances, due dates, and payment history.
+8. `Backend/migrations/007_performance_indexes.sql` indexes report dates, sales, payments, orders, and foreign-key joins.
 
 > Keep `SUPABASE_SECRET_KEY` on the server only. Never expose it through frontend code or variables prefixed with `NEXT_PUBLIC_`.
 
@@ -137,6 +152,6 @@ The global application header is defined in `Frontend/tireinventory/app/Header.t
 1. Define the tire inventory schema and generated Supabase types.
 2. Add FastAPI routes for inventory CRUD operations.
 3. Connect the frontend inventory and add-tire views to the API.
-4. Implement authentication and protect administrative actions.
+4. Create staff users in Supabase Authentication; public account registration is intentionally disabled.
 5. Add order and supplier routes linked from the header.
 6. Add frontend and backend automated tests.
