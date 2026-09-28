@@ -1,4 +1,5 @@
 import { DailySalesManager, type DailySale } from "./DailySalesManager";
+import { businessDate } from "@/lib/date";
 
 async function getDailySales(date: string): Promise<DailySale[]> {
   const apiUrl = process.env.API_URL;
@@ -13,7 +14,7 @@ async function getDailySales(date: string): Promise<DailySale[]> {
 }
 
 export default async function SalesPage() {
-  const today = new Date().toISOString().slice(0, 10);
+  const today = businessDate();
   const sales = await getDailySales(today);
 
   return (

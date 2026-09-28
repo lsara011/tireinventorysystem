@@ -10,6 +10,7 @@
     "stress:pdf": "node --expose-gc scripts/stress-pdf.mjs",
     "stress:http": "node scripts/stress-http.mjs",
     "stress:validation": "node scripts/stress-api-validation.mjs",
+    "test:reports": "node scripts/test-reports.mjs",
     "test:stress": "npm run stress:pdf && npm run stress:http && npm run stress:validation"
   },
   "dependencies": {
